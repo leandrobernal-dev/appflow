@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 export default function AccountLayout({ children }) {
 	const [projects, setProjects] = useState([]);
-	const [activeProject, setActiveProject] = useState("");
+	const [activeProject, setActiveProject] = useState();
 
 	const [teams, setTeams] = useState([]);
 
@@ -21,19 +21,22 @@ export default function AccountLayout({ children }) {
 
 	// setting activeProject
 	useEffect(() => {
-		if (localStorage.getItem("activeProject") && !activeProject) {
-			if (!projects[0]) return;
-			setActiveProject(projects[0]);
-			return;
-		}
-
-		if (localStorage.getItem("activeProject") !== null) {
-			const project = JSON.parse(localStorage.getItem("activeProject"));
-
-			// if a project is saved in localstorage but deleted, set a new active project
-			if (projects.find((item) => item.id === project.id)) {
-				setActiveProject(project);
+		// if activeProject already exist in localstorage
+		// check if localstorage_activeProject still exist in database by checking projects state
+		//  - set activeProject state to the existing value in localstorage
+		// else if localstorage_activeProject does not exist
+		// set activeProject to projects[0]
+		// else if localstorage doesn't have a valid activeProject
+		// set activeProject to projects[0]
+		const localActiveProject = JSON.parse(
+			localStorage.getItem("activeProject"),
+		);
+		if (localActiveProject !== null) {
+			if (projects.find((item) => item.id === localActiveProject.id)) {
+				setActiveProject(localActiveProject);
 			} else {
+				localStorage.removeItem("activeProject");
+				if (!projects[0]) return;
 				setActiveProject(projects[0]);
 				localStorage.setItem(
 					"activeProject",
@@ -41,14 +44,16 @@ export default function AccountLayout({ children }) {
 				);
 			}
 		} else {
-			setActiveProject(projects[0]);
+			if (!projects[0]) return;
+
+			setActiveProject(projects[0] ? projects[0] : "");
 			localStorage.setItem("activeProject", JSON.stringify(projects[0]));
 		}
 	}, [projects]);
 
 	// fetching teams related to active project
 	useEffect(() => {
-		if (!activeProject.id) return;
+		if (!activeProject) return;
 		axios
 			.get("/api/teams?id=" + activeProject.id)
 			.then((data) => setTeams(data.data.teams.teams));
