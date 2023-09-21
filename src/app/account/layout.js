@@ -10,9 +10,22 @@ export default function AccountLayout({ children }) {
 	const [projects, setProjects] = useState([]);
 	const [activeProject, setActiveProject] = useState("");
 
+	const [teams, setTeams] = useState([]);
+
+	// fetch user projects
 	useEffect(() => {
-		const isProjectsLoaded = projects.length !== 0;
-		if (!isProjectsLoaded) return;
+		axios
+			.get("/api/project")
+			.then((data) => setProjects(data.data.data.projects));
+	}, []);
+
+	// setting activeProject
+	useEffect(() => {
+		if (localStorage.getItem("activeProject") && !activeProject) {
+			if (!projects[0]) return;
+			setActiveProject(projects[0]);
+			return;
+		}
 
 		if (localStorage.getItem("activeProject") !== null) {
 			const project = JSON.parse(localStorage.getItem("activeProject"));
@@ -33,12 +46,14 @@ export default function AccountLayout({ children }) {
 		}
 	}, [projects]);
 
-	// fetch user projects
+	// fetching teams related to active project
 	useEffect(() => {
+		if (!activeProject.id) return;
 		axios
-			.get("/api/project")
-			.then((data) => setProjects(data.data.data.projects));
-	}, []);
+			.get("/api/teams?id=" + activeProject.id)
+			.then((data) => setTeams(data.data.teams.teams));
+	}, [activeProject]);
+
 	return (
 		<UserDataContextProvider
 			value={{
