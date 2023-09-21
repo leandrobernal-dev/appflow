@@ -14,7 +14,7 @@ export default function NavBar() {
 				</button>
 			</div>
 			<div className="hidden items-center justify-between gap-2 sm:flex">
-				<NavButtons />
+				<NavButtons isMobile={false} />
 			</div>
 		</nav>
 	);

@@ -8,7 +8,7 @@ import {
 	PriorityHighRounded,
 } from "@mui/icons-material";
 
-export default function NavButtons() {
+export default function NavButtons({ isMobile }) {
 	return (
 		<>
 			<button className="rounded-lg bg-secondary-light p-2 ">
@@ -16,13 +16,23 @@ export default function NavButtons() {
 			</button>
 
 			<button
-				data-dropdown-toggle="project-select-dropdown"
+				data-dropdown-toggle={
+					isMobile
+						? "mobile-project-select-dropdown"
+						: "project-select-dropdown"
+				}
 				className="flex items-center justify-center gap-1 rounded-lg bg-primary p-2 text-text-dark dark:text-text-light"
 			>
 				<span>Select Project</span>
 				<ArrowDropDownCircleOutlined />
 			</button>
-			<CustomDropDown id="project-select-dropdown">
+			<CustomDropDown
+				id={
+					isMobile
+						? "mobile-project-select-dropdown"
+						: "project-select-dropdown"
+				}
+			>
 				<div>
 					<a
 						href="/account/newproject"
