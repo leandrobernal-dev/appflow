@@ -29,8 +29,7 @@ const UserSchema = new Schema(
 UserSchema.virtual("projects", {
 	ref: Project,
 	localField: "_id",
-	foreignField: "user",
+	foreignField: "admin",
 });
-
 const User = userDb.model("Users", UserSchema);
 export default User;
