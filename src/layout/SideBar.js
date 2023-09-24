@@ -5,25 +5,32 @@ import {
 	ViewKanbanRounded,
 	WorkspacesRounded,
 } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 
 export default function Sidebar() {
+	const router = useRouter();
+
 	const sideBarButtons = [
 		{
 			name: "Teams",
 			icon: <WorkspacesRounded />,
+			href: "/account/",
 			active: true,
 		},
 		{
 			name: "Kanban",
 			icon: <ViewKanbanRounded />,
+			href: "/account/kanban",
 		},
 		{
 			name: "Settings",
 			icon: <TuneRounded />,
+			href: "/account/settings",
 		},
 		{
 			name: "Project Activity",
 			icon: <TrendingUpRounded />,
+			href: "/account/activity",
 		},
 	];
 	return (
@@ -35,6 +42,7 @@ export default function Sidebar() {
 				{sideBarButtons.map((button, index) => {
 					return (
 						<button
+							onClick={() => router.push(button.href)}
 							key={button.name + index}
 							className={`flex w-full items-center gap-2 rounded-lg text-text-light dark:text-text-dark ${
 								button.active ? "font-black" : "font-medium"
