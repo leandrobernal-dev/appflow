@@ -14,49 +14,51 @@ export default function AccountLayout({ children }) {
 
 	// fetch user projects
 	useEffect(() => {
-		axios
-			.get("/api/project")
-			.then((data) => setProjects(data.data.data.projects));
+		axios.get("/api/project").then(({ data }) => {
+			setProjects(data.data.projects);
+		});
 	}, []);
 
 	// setting activeProject
 	useEffect(() => {
-		// if activeProject already exist in localstorage
-		// check if localstorage_activeProject still exist in database by checking projects state
-		//  - set activeProject state to the existing value in localstorage
-		// else if localstorage_activeProject does not exist
-		// set activeProject to projects[0]
-		// else if localstorage doesn't have a valid activeProject
-		// set activeProject to projects[0]
 		const localActiveProject = JSON.parse(
 			localStorage.getItem("activeProject"),
 		);
 		if (localActiveProject !== null) {
-			if (projects.find((item) => item.id === localActiveProject.id)) {
+			console.log("project found on local storage");
+			if (
+				projects.find(
+					(item) => item.project.id === localActiveProject.id,
+				)
+			) {
 				setActiveProject(localActiveProject);
 			} else {
-				localStorage.removeItem("activeProject");
 				if (!projects[0]) return;
-				setActiveProject(projects[0]);
+				localStorage.removeItem("activeProject");
+				setActiveProject(projects[0].project);
 				localStorage.setItem(
 					"activeProject",
-					JSON.stringify(projects[0]),
+					JSON.stringify(projects[0].project),
 				);
 			}
-		} else {
-			if (!projects[0]) return;
+		} else if (projects[0]) {
+			console.log("no project found on localstorage");
 
-			setActiveProject(projects[0] ? projects[0] : "");
-			localStorage.setItem("activeProject", JSON.stringify(projects[0]));
+			setActiveProject(projects[0] ? projects[0].project : "");
+			localStorage.setItem(
+				"activeProject",
+				JSON.stringify(projects[0].project),
+			);
 		}
 	}, [projects]);
 
 	// fetching teams related to active project
 	useEffect(() => {
 		if (!activeProject) return;
-		axios
-			.get("/api/teams?id=" + activeProject.id)
-			.then((data) => setTeams(data.data.teams.teams));
+		axios.get("/api/teams?id=" + activeProject.id).then(({ data }) => {
+			console.log(data);
+			setTeams(data.teams);
+		});
 	}, [activeProject]);
 
 	return (
@@ -72,7 +74,7 @@ export default function AccountLayout({ children }) {
 				<Sidebar />
 				<NavBar />
 
-				{children}
+				<div className="p-4">{children}</div>
 			</main>
 		</UserDataContextProvider>
 	);
