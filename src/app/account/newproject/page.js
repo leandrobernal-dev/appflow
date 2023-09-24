@@ -17,19 +17,17 @@ export default function NewProjectPage() {
 				name: name.value,
 				description: description.value,
 			})
-			.then((response) => {
-				const data = response.data;
-				console.log(data);
-				setActiveProject(data.data);
+			.then(({ data }) => {
+				setActiveProject(data.project);
 				setProjects((prevProjects) => {
 					const newProjects = [...prevProjects];
-					newProjects.push(data.data);
+					newProjects.push(data.project);
 					return newProjects;
 				});
-				if (data.data) {
+				if (data) {
 					localStorage.setItem(
 						"activeProject",
-						JSON.stringify(data.data),
+						JSON.stringify(data.project),
 					);
 				}
 				router.push("/account");
