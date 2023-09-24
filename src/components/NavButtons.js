@@ -1,10 +1,12 @@
 import CustomDropDown from "@/components/CustomDropDown";
 import { UserDataContext } from "@/context/UserDataContext";
+import { signOut } from "next-auth/react";
 import {
 	AccountCircleRounded,
 	AddCircleRounded,
 	ArrowDropDownCircleOutlined,
 	DarkModeOutlined,
+	LogoutRounded,
 	NotificationsRounded,
 	PriorityHighRounded,
 } from "@mui/icons-material";
@@ -13,7 +15,15 @@ import { useContext } from "react";
 export default function NavButtons({ isMobile }) {
 	const { projects, activeProject, setActiveProject } =
 		useContext(UserDataContext);
-	const projectsDropdown = projects.map((project) => {
+
+	const userProject = projects.filter(
+		(projectMember) => projectMember.role === "admin",
+	);
+	const projectInvite = projects.filter(
+		(projectMember) => projectMember.role === "member",
+	);
+
+	const userProjectsList = userProject.map(({ project }) => {
 		return (
 			<li key={"nav-button" + project.id}>
 				<button
@@ -38,6 +48,32 @@ export default function NavButtons({ isMobile }) {
 			</li>
 		);
 	});
+	const projectInviteList = projectInvite.map(({ project }) => {
+		return (
+			<li key={"nav-button" + project.id}>
+				<button
+					onClick={() => {
+						setActiveProject(project);
+						localStorage.setItem(
+							"activeProject",
+							JSON.stringify(project),
+						);
+						document.body.click(); // hide dropdown by clicking html body
+					}}
+					className={`block w-full px-4 py-2 text-start hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white ${
+						activeProject
+							? activeProject.id === project.id
+								? "font-black"
+								: ""
+							: ""
+					}`}
+				>
+					<span>{project.name}</span>
+				</button>
+			</li>
+		);
+	});
+
 	return (
 		<>
 			<button className="rounded-lg bg-secondary-light p-2 ">
@@ -73,7 +109,10 @@ export default function NavButtons({ isMobile }) {
 					</a>
 				</div>
 				<ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-					{projects.length < 1 ? (
+					<li className="pointer-events-none block px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+						My Projects: <span>{userProject.length}</span>
+					</li>
+					{userProject.length < 1 ? (
 						<li>
 							<span className="pointer-events-none block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
 								<PriorityHighRounded />
@@ -81,17 +120,41 @@ export default function NavButtons({ isMobile }) {
 							</span>
 						</li>
 					) : (
-						projectsDropdown
+						userProjectsList
 					)}
+				</ul>
+				<ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+					<li className="pointer-events-none block px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+						Project Invites: <span>{projectInvite.length}</span>
+					</li>
+					{projectInviteList}
 				</ul>
 			</CustomDropDown>
 
 			<button className="rounded-lg bg-secondary-dark p-2 text-text-dark dark:bg-secondary-light">
 				<DarkModeOutlined />
 			</button>
-			<button className="rounded-lg bg-secondary-light p-2">
+			<button
+				data-dropdown-toggle={
+					isMobile ? "mobile-account-dropdown" : "account-dropdown"
+				}
+				className="rounded-lg bg-secondary-light p-2"
+			>
 				<AccountCircleRounded />
 			</button>
+			<CustomDropDown
+				id={isMobile ? "mobile-account-dropdown" : "account-dropdown"}
+			>
+				<div>
+					<button
+						className="block w-full px-4 py-2 text-start hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+						onClick={() => signOut()}
+					>
+						<LogoutRounded />
+						<span>Logout</span>
+					</button>
+				</div>
+			</CustomDropDown>
 		</>
 	);
 }
