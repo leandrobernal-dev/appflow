@@ -5,6 +5,7 @@ import {
 	ViewKanbanRounded,
 	WorkspacesRounded,
 } from "@mui/icons-material";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Sidebar() {
@@ -41,15 +42,15 @@ export default function Sidebar() {
 			<div className="flex flex-col gap-6 py-4">
 				{sideBarButtons.map((button, index) => {
 					return (
-						<button
-							onClick={() => router.push(button.href)}
+						<Link
 							key={button.name + index}
+							href={button.href}
 							className={`flex w-full items-center gap-2 rounded-lg text-text-light dark:text-text-dark ${
 								button.active ? "font-black" : "font-medium"
 							}`}
 						>
 							{button.icon} <span>{button.name}</span>
-						</button>
+						</Link>
 					);
 				})}
 			</div>
