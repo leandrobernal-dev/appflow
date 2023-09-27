@@ -18,6 +18,10 @@ const TeamMemberSchema = new Schema(
 			ref: "Team",
 			required: true,
 		},
+		role: {
+			type: String,
+			required: false,
+		},
 	},
 	{
 		timestamps: true,
