@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
 		<html lang="en" className="">
 			<body
 				suppressHydrationWarning={true}
-				className={`${inter.className} h-screen w-screen bg-background-light dark:bg-background-dark`}
+				className={`${inter.className} h-screen w-screen bg-background-light text-text-light dark:bg-background-dark dark:text-text-dark`}
 			>
 				<div className="h-full w-full">{children}</div>
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
