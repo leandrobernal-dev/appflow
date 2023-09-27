@@ -2,6 +2,7 @@ import dbConnect from "@/db/database";
 import Project from "@/models/Project";
 import ProjectMember from "@/models/ProjectMember";
 import Team from "@/models/Team";
+import TeamMember from "@/models/TeamMember";
 import User from "@/models/User";
 import { getServerSession } from "next-auth";
 
@@ -85,6 +86,7 @@ export const DELETE = async (request) => {
 		const project = await Project.findById(id);
 		await Team.deleteMany({ project });
 		await ProjectMember.deleteMany({ project });
+		await TeamMember.deleteMany({ project });
 		await project.deleteOne();
 
 		return NextResponse.json({ msg: "Project deleted Successfully" });
