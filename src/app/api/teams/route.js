@@ -16,21 +16,22 @@ export const GET = async (request) => {
 		if (searchParams.get("id")) {
 			const projectId = searchParams.get("id").toString().trim();
 			const account = await User.findOne({ email: user.email });
-			let data = await Project.findById(projectId).populate("teams");
+			let data = await Project.findById(projectId).populate({
+				path: "teams",
+				populate: {
+					path: "teammembers",
+					populate: { path: "user", model: User },
+				},
+			});
 
 			const isAdmin = account.id === data.admin.toJSON();
+			return NextResponse.json({ teams: data });
 			if (isAdmin) {
-				return NextResponse.json({ teams: data });
+				// TODO: return data for non admins
 			}
-
-			const projectMember = await TeamMember.find({
-				user: account,
-			}).populate({ path: "team", model: Team });
-
-			// TODO: return data for non admins
-			return NextResponse.json({ projectMember });
 		}
 	} catch (error) {
+		console.log(error);
 		return NextResponse.json(error);
 	}
 
@@ -48,6 +49,12 @@ export const POST = async (request) => {
 			description,
 			project,
 		});
+		const newTeamMember = new TeamMember({
+			project,
+			user: account,
+			team: newTeam,
+		});
+		await newTeamMember.save();
 		await newTeam.save();
 		return NextResponse.json({ msg: "Success", data: newTeam });
 	} catch (error) {
