@@ -6,11 +6,8 @@ import {
 	WorkspacesRounded,
 } from "@mui/icons-material";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export default function Sidebar() {
-	const router = useRouter();
-
 	const sideBarButtons = [
 		{
 			name: "Teams",
