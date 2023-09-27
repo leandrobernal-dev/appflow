@@ -9,21 +9,20 @@ import {
 	ShareRounded,
 } from "@mui/icons-material";
 import { initFlowbite } from "flowbite";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useContext, useEffect } from "react";
 
 export default function AccountPage() {
 	useEffect(() => initFlowbite(), []);
-	const router = useRouter();
 	const { teams } = useContext(UserDataContext);
 	useEffect(() => console.log(teams), [teams]);
 
 	const teamElements = teams
 		? teams.map((team) => {
 				return (
-					<button
+					<Link
+						href={"/account/" + team.id}
 						key={"team" + team.id}
-						onClick={() => router.push("/account/" + team.id)}
 						className="w-full max-w-xs rounded-lg border border-primary/50 bg-secondary-light p-2 text-start shadow-lg"
 					>
 						<div className="flex flex-col gap-1">
@@ -87,7 +86,7 @@ export default function AccountPage() {
 								);
 							})}
 						</div>
-					</button>
+					</Link>
 				);
 		  })
 		: "You Haven't created Teams yet";
@@ -100,13 +99,13 @@ export default function AccountPage() {
 					</span>
 				</h1>
 				<div className="flex gap-2">
-					<button
-						onClick={() => router.push("/account/create-team")}
+					<Link
+						href={"/account/create-team"}
 						className="rounded-lg bg-accent-light p-2 text-text-dark"
 					>
 						<AddCircleRounded />
 						<span>Create Team</span>
-					</button>
+					</Link>
 					<button
 						data-modal-target="project-invite-popup-modal"
 						data-modal-toggle="project-invite-popup-modal"
