@@ -1,12 +1,14 @@
 "use client";
 
+import AuthProvider from "@/context/AuthProvider";
 import UserDataContextProvider from "@/context/UserDataContext";
 import NavBar from "@/layout/NavBar";
 import Sidebar from "@/layout/SideBar";
 import axios from "axios";
+import { initFlowbite } from "flowbite";
 import { useEffect, useState } from "react";
 
-export default function AccountLayout({ children }) {
+export default function AccountLayout({ children, Session }) {
 	const [projects, setProjects] = useState([]);
 	const [activeProject, setActiveProject] = useState();
 
@@ -14,6 +16,7 @@ export default function AccountLayout({ children }) {
 
 	// fetch user projects
 	useEffect(() => {
+		initFlowbite();
 		axios.get("/api/project").then(({ data }) => {
 			setProjects(data.data.projects);
 		});
@@ -56,26 +59,28 @@ export default function AccountLayout({ children }) {
 	useEffect(() => {
 		if (!activeProject) return;
 		axios.get("/api/teams?id=" + activeProject.id).then(({ data }) => {
-			console.log(data);
-			setTeams(data.teams);
+			setTeams(data.teams.teams);
 		});
 	}, [activeProject]);
 
 	return (
-		<UserDataContextProvider
-			value={{
-				projects,
-				setProjects,
-				activeProject,
-				setActiveProject,
-			}}
-		>
-			<main className="pt-20 sm:pl-48 ">
-				<Sidebar />
-				<NavBar />
+		<AuthProvider session={Session}>
+			<UserDataContextProvider
+				value={{
+					projects,
+					setProjects,
+					activeProject,
+					setActiveProject,
+					teams,
+				}}
+			>
+				<main className="pt-20 sm:pl-48 ">
+					<Sidebar />
+					<NavBar />
 
-				<div className="p-4">{children}</div>
-			</main>
-		</UserDataContextProvider>
+					<div className="p-4">{children}</div>
+				</main>
+			</UserDataContextProvider>
+		</AuthProvider>
 	);
 }
