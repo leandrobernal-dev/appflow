@@ -11,6 +11,7 @@ import {
 	PriorityHighRounded,
 } from "@mui/icons-material";
 import { useContext } from "react";
+import Link from "next/link";
 
 export default function NavButtons({ isMobile }) {
 	const { projects, activeProject, setActiveProject } =
@@ -101,12 +102,12 @@ export default function NavButtons({ isMobile }) {
 				}
 			>
 				<div>
-					<a
+					<Link
 						href="/account/newproject"
 						className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
 					>
 						<AddCircleRounded /> <span>New Project</span>
-					</a>
+					</Link>
 				</div>
 				<ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
 					<li className="pointer-events-none block px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
