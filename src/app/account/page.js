@@ -21,7 +21,7 @@ export default function AccountPage() {
 		? teams.map((team) => {
 				return (
 					<Link
-						href={"/account/" + team.id}
+						href={"/account/team/" + team.id}
 						key={"team" + team.id}
 						className="w-full max-w-xs rounded-lg border border-primary/50 bg-secondary-light p-2 text-start shadow-lg"
 					>
@@ -98,7 +98,7 @@ export default function AccountPage() {
 						Project Teams: <span>{teams.length}</span>
 					</span>
 				</h1>
-				<div className="flex gap-2">
+				<div className={`flex gap-2`}>
 					<Link
 						href={"/account/create-team"}
 						className="rounded-lg bg-accent-light p-2 text-text-dark"
