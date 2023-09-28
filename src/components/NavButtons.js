@@ -104,6 +104,7 @@ export default function NavButtons({ isMobile }) {
 				<div>
 					<Link
 						href="/account/newproject"
+						onClick={() => document.body.click()}
 						className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
 					>
 						<AddCircleRounded /> <span>New Project</span>
