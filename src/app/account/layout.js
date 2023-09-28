@@ -82,6 +82,7 @@ export default function AccountLayout({ children, Session }) {
 					activeProject,
 					setActiveProject,
 					teams,
+					projectMembers,
 				}}
 			>
 				<main className="pt-20 sm:pl-48 ">
