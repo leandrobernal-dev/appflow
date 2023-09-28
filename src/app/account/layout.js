@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 export default function AccountLayout({ children, Session }) {
 	const [projects, setProjects] = useState([]);
 	const [activeProject, setActiveProject] = useState();
+	const [projectMembers, setProjectMembers] = useState([]);
 
 	const [teams, setTeams] = useState([]);
 
@@ -21,6 +22,15 @@ export default function AccountLayout({ children, Session }) {
 			setProjects(data.data.projects);
 		});
 	}, []);
+
+	// fetch project members
+	useEffect(() => {
+		if (!activeProject) return;
+		if (!activeProject.id) return;
+		axios.get("/api/project?id=" + activeProject.id).then(({ data }) => {
+			console.log(data);
+		});
+	}, [activeProject]);
 
 	// setting activeProject
 	useEffect(() => {
