@@ -5,8 +5,7 @@ import { useContext } from "react";
 
 export default function TeamDetails({ params }) {
 	const { teams } = useContext(UserDataContext);
-	const team = teams.find((item) => item.id === params.id);
-	console.log(team);
+	const team = teams.find((item) => item.id === params.teamid);
 	const teamElements = teams
 		? teams.map((team) => {
 				return (
