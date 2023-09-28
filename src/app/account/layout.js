@@ -28,7 +28,7 @@ export default function AccountLayout({ children, Session }) {
 		if (!activeProject) return;
 		if (!activeProject.id) return;
 		axios.get("/api/project?id=" + activeProject.id).then(({ data }) => {
-			console.log(data);
+			setProjectMembers(data.data.members);
 		});
 	}, [activeProject]);
 
