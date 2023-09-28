@@ -13,7 +13,7 @@ export default function Sidebar() {
 	const pathname = usePathname();
 	const sideBarButtons = [
 		{
-			name: "Teams",
+			name: "Project",
 			icon: <WorkspacesRounded />,
 			href: "/account/",
 			active: true,
