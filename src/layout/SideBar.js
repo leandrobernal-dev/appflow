@@ -26,7 +26,7 @@ export default function Sidebar() {
 		{
 			name: "Settings",
 			icon: <TuneRounded />,
-			href: "/account/settings",
+			href: "/account/project-settings",
 		},
 		{
 			name: "Project Activity",
