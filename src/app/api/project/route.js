@@ -8,10 +8,28 @@ import { getServerSession } from "next-auth";
 
 import { NextResponse } from "next/server";
 
-export const GET = async () => {
+export const GET = async (request) => {
 	await dbConnect();
 
 	try {
+		const { searchParams } = new URL(request.url);
+
+		// if project id is present, return data for that specific project
+		if (searchParams.get("id")) {
+			const projectId = searchParams.get("id").toString().trim();
+			let data = await Project.findById(projectId)
+				.populate({
+					path: "members",
+					model: ProjectMember,
+					populate: {
+						path: "user",
+						model: User,
+					},
+				})
+				.populate({ path: "admin", model: User });
+			return NextResponse.json({ data });
+		}
+
 		const { user } = await getServerSession();
 		const account = await User.findOne({ email: user.email });
 
