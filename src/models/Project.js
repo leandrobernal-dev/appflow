@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import Team from "./Team";
+import ProjectMember from "./ProjectMember";
 
 const projectDb = mongoose.connection.useDb("Projects");
 const ProjectSchema = new Schema(
@@ -26,6 +27,11 @@ const ProjectSchema = new Schema(
 );
 ProjectSchema.virtual("teams", {
 	ref: Team,
+	localField: "_id",
+	foreignField: "project",
+});
+ProjectSchema.virtual("members", {
+	ref: ProjectMember,
 	localField: "_id",
 	foreignField: "project",
 });
