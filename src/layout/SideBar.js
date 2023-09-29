@@ -1,9 +1,9 @@
 import NavButtons from "@/components/NavButtons";
 import {
+	SettingsApplicationsRounded,
 	TrendingUpRounded,
 	TuneRounded,
 	ViewKanbanRounded,
-	WorkspacesRounded,
 } from "@mui/icons-material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,7 +14,7 @@ export default function Sidebar() {
 	const sideBarButtons = [
 		{
 			name: "Project",
-			icon: <WorkspacesRounded />,
+			icon: <SettingsApplicationsRounded />,
 			href: "/account/",
 			active: true,
 		},
