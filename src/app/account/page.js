@@ -4,17 +4,21 @@ import ProjectInviteModal from "@/components/ProjectInviteModal";
 import { UserDataContext } from "@/context/UserDataContext";
 import {
 	AddCircleRounded,
+	CalendarMonthRounded,
 	NotificationsRounded,
 	PushPinRounded,
 	ShareRounded,
 } from "@mui/icons-material";
 import { initFlowbite } from "flowbite";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useContext, useEffect } from "react";
 
 export default function AccountPage() {
 	useEffect(() => initFlowbite(), []);
-	const { teams } = useContext(UserDataContext);
+	const { teams, projectMembers, user, setUser, activeProject } =
+		useContext(UserDataContext);
+	const { data: session, status } = useSession({ required: true });
 	useEffect(() => console.log(teams), [teams]);
 
 	const teamElements = teams
@@ -23,9 +27,9 @@ export default function AccountPage() {
 					<Link
 						href={"/account/team/" + team.id}
 						key={"team" + team.id}
-						className="w-full max-w-xs rounded-lg border border-primary/50 bg-secondary-light p-2 text-start shadow-lg"
+						className="w-full max-w-sm rounded-lg border border-primary/50 bg-secondary-light p-2 text-start shadow-lg"
 					>
-						<div className="flex flex-col gap-1">
+						<div className="flex flex-col gap-4">
 							<span className="flex justify-between">
 								<h5 className=" text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
 									{team.name}
@@ -45,53 +49,118 @@ export default function AccountPage() {
 									</button>
 								</span>
 							</span>
-							<p className=" text-sm font-normal text-gray-700 dark:text-gray-400">
-								{team.description}
-							</p>
+							<span>
+								<div className=" flex justify-between text-base font-medium dark:text-white">
+									<span>Progress</span> <span>45%</span>
+								</div>
+								<div className="mb-4 h-1.5 w-full rounded-full bg-gray-200">
+									<div
+										className={`h-1.5 rounded-full bg-text-light ${"w-[45%]"}`} // TODO: add to dos progress here
+									></div>
+								</div>
+							</span>
 						</div>
-						<div className="pt-4">
-							{team.teammembers.map(({ user }) => {
-								return (
-									<button
-										onClick={(e) => {
-											e.stopPropagation();
-											console.log(user);
-										}}
-										key={"team" + team.id + user.id}
-									>
-										<img
-											className="h-10 w-10 rounded-full p-1 ring-2 ring-gray-300 dark:ring-gray-500"
-											src={
-												user.profile
-													? "/docs/images/people/profile-picture-5.jpg"
-													: "/avatar.svg"
-											}
-											alt="profile"
-											data-tooltip-target={
-												"avatar" + user.id
-											}
-										/>
-
-										<div
-											id={"avatar" + user.id}
-											role="tooltip"
-											className="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700"
+						<div className="flex items-center justify-between">
+							<span className="rounded-lg bg-primary p-1 text-sm text-text-dark">
+								{new Date(team.createdAt).toLocaleDateString(
+									"en-US",
+									{
+										month: "short",
+										day: "numeric",
+										year: "numeric",
+									},
+								)}
+							</span>
+							<div>
+								{team.teammembers.map(({ user }) => {
+									return (
+										<button
+											onClick={(e) => {
+												e.stopPropagation();
+												console.log(user);
+											}}
+											key={"team" + team.id + user.id}
 										>
-											{user.name} -{" "}
-											{user.role
-												? user.role
-												: "NO SPECIFIED TEAM-ROLE"}
-										</div>
-									</button>
-								);
-							})}
+											<img
+												className="h-10 w-10 rounded-full p-1 ring-2 ring-gray-300 dark:ring-gray-500"
+												src={
+													user.profile
+														? "/docs/images/people/profile-picture-5.jpg"
+														: "/avatar.svg"
+												}
+												alt="profile"
+												data-tooltip-target={
+													"avatar" + user.id
+												}
+											/>
+
+											<div
+												id={"avatar" + user.id}
+												role="tooltip"
+												className="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700"
+											>
+												{user.name} -{" "}
+												{user.role
+													? user.role
+													: "NO SPECIFIED TEAM-ROLE"}
+											</div>
+										</button>
+									);
+								})}
+							</div>
 						</div>
 					</Link>
 				);
 		  })
 		: "You Haven't created Teams yet";
 	return (
-		<div>
+		<div className="flex flex-col gap-4 px-4">
+			<div className="flex items-center justify-between">
+				<div>
+					<h1 className="text-2xl font-black">
+						Welcome,{" "}
+						{status === "authenticated"
+							? session.user.name.split(" ")[0]
+							: ""}
+					</h1>
+					<p className="text-sm text-primary">
+						Check out latest project updates
+					</p>
+				</div>
+				<div className="flex items-center justify-between gap-1 rounded-lg border-2 border-background-dark/50 p-4 font-bold">
+					<span>
+						<CalendarMonthRounded />
+					</span>
+					<span>
+						{new Date(activeProject.createdAt).toLocaleDateString(
+							"en-US",
+							{ month: "short", day: "2-digit", year: "numeric" },
+						)}
+					</span>
+				</div>
+			</div>
+
+			<div className="item-center flex">{teamElements}</div>
+			{/* <div className="w-full py-4">
+				<div className="flex w-full justify-center gap-2">
+					{projectMembers.map(({ user }) => {
+						return (
+							<div className="flex flex-col items-center justify-center gap-1">
+								<img
+									className="h-10 w-10 rounded-full p-1 ring-2 ring-gray-300 dark:ring-gray-500"
+									src={
+										user.profile
+											? "/docs/images/people/profile-picture-5.jpg"
+											: "/avatar.svg"
+									}
+									alt="profile"
+								/>
+								<span className="text-xs">{user.name}</span>
+							</div>
+						);
+					})}
+				</div>
+			</div>
 			<div className="flex justify-between">
 				<h1 className="text-2xl font-black">
 					<span>
@@ -116,10 +185,7 @@ export default function AccountPage() {
 					</button>
 					<ProjectInviteModal />
 				</div>
-			</div>
-			<div className="item-center flex justify-center">
-				{teamElements}
-			</div>
+			</div> */}
 		</div>
 	);
 }
