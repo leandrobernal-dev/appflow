@@ -6,12 +6,14 @@ import NavBar from "@/layout/NavBar";
 import Sidebar from "@/layout/SideBar";
 import axios from "axios";
 import { initFlowbite } from "flowbite";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export default function AccountLayout({ children, Session }) {
 	const [projects, setProjects] = useState([]);
 	const [activeProject, setActiveProject] = useState();
 	const [projectMembers, setProjectMembers] = useState([]);
+	const [user, setUser] = useState();
 
 	const [teams, setTeams] = useState([]);
 
@@ -38,7 +40,7 @@ export default function AccountLayout({ children, Session }) {
 			localStorage.getItem("activeProject"),
 		);
 		if (localActiveProject !== null) {
-			console.log("project found on local storage");
+			// console.log("project found on local storage");
 			if (
 				projects.find(
 					(item) => item.project.id === localActiveProject.id,
@@ -55,7 +57,7 @@ export default function AccountLayout({ children, Session }) {
 				);
 			}
 		} else if (projects[0]) {
-			console.log("no project found on localstorage");
+			// console.log("no project found on localstorage");
 
 			setActiveProject(projects[0] ? projects[0].project : "");
 			localStorage.setItem(
@@ -83,6 +85,9 @@ export default function AccountLayout({ children, Session }) {
 					setActiveProject,
 					teams,
 					projectMembers,
+					user,
+					setUser,
+					activeProject,
 				}}
 			>
 				<main className="pt-20 sm:pl-48 ">
