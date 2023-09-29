@@ -9,6 +9,7 @@ import {
 	PushPinRounded,
 	ShareRounded,
 } from "@mui/icons-material";
+import { Avatar } from "@mui/material";
 import { initFlowbite } from "flowbite";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -61,7 +62,7 @@ export default function AccountPage() {
 							</span>
 						</div>
 						<div className="flex items-center justify-between">
-							<span className="rounded-lg bg-primary p-1 text-sm text-text-dark">
+							<span className="rounded-full bg-primary p-2 text-sm text-text-dark">
 								{new Date(team.createdAt).toLocaleDateString(
 									"en-US",
 									{
@@ -74,37 +75,12 @@ export default function AccountPage() {
 							<div>
 								{team.teammembers.map(({ user }) => {
 									return (
-										<button
-											onClick={(e) => {
-												e.stopPropagation();
-												console.log(user);
-											}}
+										<Avatar
 											key={"team" + team.id + user.id}
+											src={user.profile}
 										>
-											<img
-												className="h-10 w-10 rounded-full p-1 ring-2 ring-gray-300 dark:ring-gray-500"
-												src={
-													user.profile
-														? "/docs/images/people/profile-picture-5.jpg"
-														: "/avatar.svg"
-												}
-												alt="profile"
-												data-tooltip-target={
-													"avatar" + user.id
-												}
-											/>
-
-											<div
-												id={"avatar" + user.id}
-												role="tooltip"
-												className="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700"
-											>
-												{user.name} -{" "}
-												{user.role
-													? user.role
-													: "NO SPECIFIED TEAM-ROLE"}
-											</div>
-										</button>
+											{String(user.name)[0].toUpperCase()}
+										</Avatar>
 									);
 								})}
 							</div>
@@ -114,10 +90,10 @@ export default function AccountPage() {
 		  })
 		: "You Haven't created Teams yet";
 	return (
-		<div className="flex flex-col gap-4 px-4">
+		<div className="flex flex-col gap-8 px-4">
 			<div className="flex items-center justify-between">
 				<div>
-					<h1 className="text-2xl font-black">
+					<h1 className="text-3xl font-black">
 						Welcome,{" "}
 						{status === "authenticated"
 							? session.user.name.split(" ")[0]
@@ -127,15 +103,20 @@ export default function AccountPage() {
 						Check out latest project updates
 					</p>
 				</div>
-				<div className="flex items-center justify-between gap-1 rounded-lg border-2 border-background-dark/50 p-4 font-bold">
+				<div className="flex items-center justify-between gap-1 rounded-lg border-2 border-background-dark/50 p-3 font-bold">
 					<span>
 						<CalendarMonthRounded />
 					</span>
 					<span>
-						{new Date(activeProject.createdAt).toLocaleDateString(
-							"en-US",
-							{ month: "short", day: "2-digit", year: "numeric" },
-						)}
+						{activeProject
+							? new Date(
+									activeProject.createdAt,
+							  ).toLocaleDateString("en-US", {
+									month: "short",
+									day: "2-digit",
+									year: "numeric",
+							  })
+							: ""}
 					</span>
 				</div>
 			</div>
