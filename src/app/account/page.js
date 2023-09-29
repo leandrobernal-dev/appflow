@@ -1,6 +1,7 @@
 "use client";
 
 import ProjectInviteModal from "@/components/ProjectInviteModal";
+import UserAvatar from "@/components/UserAvatar";
 import { UserDataContext } from "@/context/UserDataContext";
 import {
 	AddCircleRounded,
@@ -75,12 +76,11 @@ export default function AccountPage() {
 							<div>
 								{team.teammembers.map(({ user }) => {
 									return (
-										<Avatar
-											key={"team" + team.id + user.id}
+										<UserAvatar
 											src={user.profile}
-										>
-											{String(user.name)[0].toUpperCase()}
-										</Avatar>
+											name={user.name}
+											key={"team" + team.id + user.id}
+										/>
 									);
 								})}
 							</div>
