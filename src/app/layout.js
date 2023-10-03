@@ -1,7 +1,11 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
+const poppins = Poppins({
+	subsets: ["latin"],
+	weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
 
 export const metadata = {
 	title: "AppFlow",
@@ -13,7 +17,7 @@ export default function RootLayout({ children }) {
 		<html lang="en" className="">
 			<body
 				suppressHydrationWarning={true}
-				className={`${inter.className} h-screen w-screen bg-background-light text-text-light dark:bg-background-dark dark:text-text-dark`}
+				className={`${poppins.className} bg-secondary-background-light h-screen  w-screen text-text-light dark:text-text-dark`}
 			>
 				<div className="h-full w-full">{children}</div>
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
