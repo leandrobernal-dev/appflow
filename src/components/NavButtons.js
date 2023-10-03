@@ -7,6 +7,7 @@ import {
 	ArrowDropDownCircleOutlined,
 	DarkModeOutlined,
 	LogoutRounded,
+	NotificationsActiveOutlined,
 	NotificationsRounded,
 	PriorityHighRounded,
 } from "@mui/icons-material";
@@ -14,7 +15,7 @@ import { useContext } from "react";
 import Link from "next/link";
 
 export default function NavButtons({ isMobile }) {
-	const { projects, activeProject, setActiveProject } =
+	const { projects, activeProject, setActiveProject, user } =
 		useContext(UserDataContext);
 
 	const userProject = projects.filter(
@@ -77,8 +78,8 @@ export default function NavButtons({ isMobile }) {
 
 	return (
 		<>
-			<button className="rounded-lg bg-secondary-light p-2 ">
-				<NotificationsRounded />
+			<button>
+				<NotificationsActiveOutlined />
 			</button>
 
 			<button
@@ -87,7 +88,7 @@ export default function NavButtons({ isMobile }) {
 						? "mobile-project-select-dropdown"
 						: "project-select-dropdown"
 				}
-				className="flex items-center justify-between gap-1 rounded-lg bg-primary p-2 text-text-dark dark:text-text-light"
+				className="flex h-full items-center justify-between gap-1 rounded-lg bg-accent-light p-2 text-text-dark dark:text-text-light"
 			>
 				<span className="w-32 truncate text-start">
 					{activeProject ? activeProject.name : "Select Project"}
@@ -133,23 +134,34 @@ export default function NavButtons({ isMobile }) {
 				</ul>
 			</CustomDropDown>
 
-			<button className="rounded-lg bg-secondary-dark p-2 text-text-dark dark:bg-secondary-light">
-				<DarkModeOutlined />
-			</button>
 			<button
 				data-dropdown-toggle={
 					isMobile ? "mobile-account-dropdown" : "account-dropdown"
 				}
-				className="rounded-lg bg-secondary-light p-2"
+				className="aspect-square h-full rounded-full bg-[#D95A5F] p-2 text-2xl font-bold text-white"
 			>
-				<AccountCircleRounded />
+				{user ? (
+					String(user.name)[0].toUpperCase()
+				) : (
+					<AccountCircleRounded />
+				)}
 			</button>
 			<CustomDropDown
 				id={isMobile ? "mobile-account-dropdown" : "account-dropdown"}
 			>
-				<div>
+				<div className="flex items-center gap-2 p-4">
+					<p className="flex aspect-square w-8 items-center justify-center rounded-full bg-[#D95A5F] text-xl font-bold text-white">
+						{user ? (
+							String(user.name)[0].toUpperCase()
+						) : (
+							<AccountCircleRounded />
+						)}
+					</p>
+					<p>{user ? user.name : ""}</p>
+				</div>
+				<div className="">
 					<button
-						className="block w-full px-4 py-2 text-start hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+						className="block w-full p-4 text-start hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
 						onClick={() => signOut()}
 					>
 						<LogoutRounded />
