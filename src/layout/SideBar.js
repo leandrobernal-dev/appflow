@@ -1,5 +1,6 @@
 import NavButtons from "@/components/NavButtons";
 import {
+	Dashboard,
 	SettingsApplicationsRounded,
 	TrendingUpRounded,
 	TuneRounded,
@@ -13,27 +14,47 @@ export default function Sidebar() {
 	const pathname = usePathname();
 	const sideBarButtons = [
 		{
+			type: "button",
+			name: "Dashboard",
+			icon: <Dashboard />,
+			href: "/account/team",
+		},
+		{
+			type: "group",
 			name: "Project",
-			icon: <SettingsApplicationsRounded />,
-			href: "/account/",
-			active: true,
-		},
-		{
-			name: "Kanban",
-			icon: <ViewKanbanRounded />,
-			href: "/account/kanban",
-		},
-		{
-			name: "Settings",
-			icon: <TuneRounded />,
-			href: "/account/project-settings",
-		},
-		{
-			name: "Project Activity",
-			icon: <TrendingUpRounded />,
-			href: "/account/activity",
+			href: "/account/project",
+			buttons: [
+				{
+					name: "Kanban",
+					icon: <ViewKanbanRounded />,
+					href: "/kanban",
+				},
+				{
+					name: "Settings",
+					icon: <TuneRounded />,
+					href: "/project-settings",
+				},
+				{
+					name: "Project Activity",
+					icon: <TrendingUpRounded />,
+					href: "/activity",
+				},
+			],
 		},
 	];
+
+	const SideLink = ({ href, className, ...rest }) => (
+		<Link
+			{...rest}
+			href={href}
+			onClick={() => setActiveNav(href)}
+			className={`rounded-r-full p-3 text-sm  ${
+				activeNav === href
+					? "bg-accent-light font-bold text-text-dark"
+					: ""
+			} ${className}`}
+		/>
+	);
 	const currentPath = () => {
 		function calculateJaccardSimilarity(arr1, arr2) {
 			const set1 = new Set(arr1);
@@ -45,10 +66,37 @@ export default function Sidebar() {
 			return intersectionSize / unionSize;
 		}
 
+		const extractHrefs = (items) => {
+			const hrefs = items
+				.map((item) => {
+					if (item.type === "group") {
+						return item.buttons.map((btn) => item.href + btn.href);
+					}
+					return item.href;
+				})
+				.filter(Boolean);
+
+			let flatArray = [];
+
+			function flatten(hrefs) {
+				for (let item of hrefs) {
+					if (Array.isArray(item)) {
+						flatten(item); // Recursively flatten nested arrays
+					} else {
+						flatArray.push(item); // Add scalar value to the result
+					}
+				}
+			}
+
+			flatten(hrefs);
+			return flatArray;
+		};
+		const sidelinkArray = extractHrefs(sideBarButtons);
+
 		const currentPath = pathname.split("/").filter(Boolean);
 		currentPath.unshift("/");
-		const paths = sideBarButtons.map((link) => {
-			const targetPath = link.href.split("/").filter(Boolean);
+		const paths = sidelinkArray.map((link) => {
+			const targetPath = link.split("/").filter(Boolean);
 			targetPath.unshift("/");
 			return targetPath;
 		});
@@ -61,31 +109,51 @@ export default function Sidebar() {
 			.reduce((prev, current) =>
 				current.similarity > prev.similarity ? current : prev,
 			).index;
-		return sideBarButtons[active].href;
+
+		return sidelinkArray[active];
 	};
 	useEffect(() => setActiveNav(currentPath), [pathname]);
 	const [activeNav, setActiveNav] = useState(currentPath);
 
 	return (
-		<aside className="fixed bottom-0 left-0 right-0 top-0 z-40 border-accent-light/30 bg-text-dark p-4 pt-24 dark:border-accent-dark dark:bg-secondary-dark sm:block sm:w-48 sm:border-r sm:bg-secondary-light">
+		<aside className="fixed bottom-0 left-0 right-0 top-0 z-40 border-accent-light/10 bg-white py-4 pt-20 dark:border-accent-dark dark:bg-secondary-dark sm:block sm:w-56 sm:border-r ">
 			<div className="flex items-center gap-4 sm:hidden">
 				<NavButtons isMobile={true} />
 			</div>
-			<div className="flex flex-col gap-6 py-4">
+			<div className="flex flex-col gap-2 py-4 pr-2">
 				{sideBarButtons.map((button, index) => {
+					if (button.type === "group") {
+						return (
+							<div
+								className="flex flex-col"
+								key={button.name + index}
+							>
+								<h5 className="pointer-events-none select-none py-2 pl-4 font-semibold text-text-light/80">
+									{button.name}
+								</h5>
+								{button.buttons.map((btn) => {
+									const currHref = button.href + btn.href;
+									return (
+										<SideLink
+											key={btn.name + index}
+											href={currHref}
+											className="pl-8"
+										>
+											{btn.icon} <span>{btn.name}</span>
+										</SideLink>
+									);
+								})}
+							</div>
+						);
+					}
 					return (
-						<Link
+						<SideLink
 							key={button.name + index}
 							href={button.href}
-							onClick={() => setActiveNav(button.href)}
-							className={`flex w-full items-center gap-2 rounded-lg text-text-light dark:text-text-dark ${
-								activeNav === button.href
-									? "font-black"
-									: "font-medium"
-							}`}
+							className=""
 						>
 							{button.icon} <span>{button.name}</span>
-						</Link>
+						</SideLink>
 					);
 				})}
 			</div>
