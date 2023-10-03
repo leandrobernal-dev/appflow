@@ -90,11 +90,11 @@ export default function AccountLayout({ children, Session }) {
 					activeProject,
 				}}
 			>
-				<main className="pt-20 sm:pl-48 ">
+				<main className="h-full pt-20 sm:pl-56">
 					<Sidebar />
 					<NavBar />
 
-					<div className="p-4">{children}</div>
+					<div className="h-full">{children}</div>
 				</main>
 			</UserDataContextProvider>
 		</AuthProvider>
