@@ -1,62 +1,28 @@
 "use client";
 
 import { UserDataContext } from "@/context/UserDataContext";
+import { SendRounded } from "@mui/icons-material";
 import { useContext } from "react";
 
 export default function TeamDetails({ params }) {
 	const { teams } = useContext(UserDataContext);
 	const team = teams.find((item) => item.id === params.teamid);
-	const teamElements = teams
-		? teams.map((team) => {
-				return (
-					<div key={"team" + team.id}>
-						<div className="pt-4">
-							{team.teammembers.map(({ user }) => {
-								return (
-									<button
-										onClick={(e) => {
-											e.stopPropagation();
-											console.log(user);
-										}}
-										key={"team" + team.id + user.id}
-									>
-										<img
-											className="h-10 w-10 rounded-full p-1 ring-2 ring-gray-300 dark:ring-gray-500"
-											src={
-												user.profile
-													? "/docs/images/people/profile-picture-5.jpg"
-													: "/avatar.svg"
-											}
-											alt="profile"
-											data-tooltip-target={
-												"avatar" + user.id
-											}
-										/>
-
-										<div
-											id={"avatar" + user.id}
-											role="tooltip"
-											className="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700"
-										>
-											{user.name} -{" "}
-											{user.role
-												? user.role
-												: "NO SPECIFIED TEAM-ROLE"}
-										</div>
-									</button>
-								);
-							})}
-						</div>
-					</div>
-				);
-		  })
-		: "You Haven't created Teams yet";
-
 	return (
-		<div>
-			{/* <h1>{teams[0].name}</h1> */}
-			{teamElements}
-			<div>{params.teamid}</div>
+		<div className="flex h-full flex-col overflow-hidden p-2">
+			<div className="pointer-events-none flex flex-1 select-none items-center justify-center text-lg">
+				No Messages Yet. Say Hi to the Team!
+			</div>
+			<div className="relative h-20">
+				<textarea
+					className="max-h-16 w-full resize-none rounded-lg py-4 pr-10 text-sm"
+					placeholder="Send a message"
+				></textarea>
+				<span className="absolute bottom-0 right-0 top-0 flex h-full items-center p-4 text-accent-light">
+					<button className="-rotate-[20deg]">
+						<SendRounded />
+					</button>
+				</span>
+			</div>
 		</div>
 	);
 }
