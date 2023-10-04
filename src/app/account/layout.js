@@ -5,7 +5,6 @@ import UserDataContextProvider from "@/context/UserDataContext";
 import NavBar from "@/layout/NavBar";
 import Sidebar from "@/layout/SideBar";
 import axios from "axios";
-import { initFlowbite } from "flowbite";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
@@ -19,7 +18,6 @@ export default function AccountLayout({ children, Session }) {
 
 	// fetch user projects
 	useEffect(() => {
-		initFlowbite();
 		axios.get("/api/project").then(({ data }) => {
 			setProjects(data.data.projects);
 		});

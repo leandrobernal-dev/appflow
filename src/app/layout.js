@@ -20,7 +20,6 @@ export default function RootLayout({ children }) {
 				className={`${poppins.className} bg-secondary-background-light h-screen  w-screen text-text-light dark:text-text-dark`}
 			>
 				<div className="h-full w-full">{children}</div>
-				<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
 			</body>
 		</html>
 	);
