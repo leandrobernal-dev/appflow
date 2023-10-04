@@ -14,7 +14,7 @@ export default function TeamDetails({ params }) {
 			</div>
 			<div className="relative h-20">
 				<textarea
-					className="max-h-16 w-full resize-none rounded-lg py-4 pr-10 text-sm"
+					className="shadow-shadow-light h-full w-full resize-none rounded-lg border-accent-light/20 py-4 pr-10 text-sm shadow-sm"
 					placeholder="Send a message"
 				></textarea>
 				<span className="absolute bottom-0 right-0 top-0 flex h-full items-center p-4 text-accent-light">
