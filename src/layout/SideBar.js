@@ -32,7 +32,7 @@ export default function Sidebar() {
 				{
 					name: "Settings",
 					icon: <TuneRounded />,
-					href: "/project-settings",
+					href: "/settings",
 				},
 				{
 					name: "Project Activity",
@@ -116,7 +116,7 @@ export default function Sidebar() {
 	const [activeNav, setActiveNav] = useState(currentPath);
 
 	return (
-		<aside className="fixed bottom-0 left-0 right-0 top-0 z-40 border-accent-light/10 bg-white py-4 pt-20 dark:border-accent-dark dark:bg-secondary-dark sm:block sm:w-56 sm:border-r ">
+		<aside className="bg-white fixed bottom-0 left-0 right-0 top-0 z-40 border-accent-light/10 py-4 pt-20 dark:border-accent-dark dark:bg-secondary-dark sm:block sm:w-56 sm:border-r ">
 			<div className="flex items-center gap-4 sm:hidden">
 				<NavButtons isMobile={true} />
 			</div>
@@ -128,7 +128,7 @@ export default function Sidebar() {
 								className="flex flex-col"
 								key={button.name + index}
 							>
-								<h5 className="pointer-events-none select-none py-2 pl-4 font-semibold text-text-light/80">
+								<h5 className="pointer-events-none select-none py-2 pl-4 text-sm font-semibold text-text-light/80">
 									{button.name}
 								</h5>
 								{button.buttons.map((btn) => {
